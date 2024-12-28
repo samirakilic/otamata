@@ -1,0 +1,56 @@
+class SonluOtomat:
+    def __init__(self, gecisler, baslangic_durumu, kabul_durumlari):
+        self.gecisler = gecisler
+        self.baslangic_durumu = baslangic_durumu
+        self.kabul_durumlari = set(kabul_durumlari)
+
+    def simule_et(self, girdi_dizesi):
+        mevcut_durum = self.baslangic_durumu
+        print(f"Başlangıç durumu: {mevcut_durum}")
+
+        for sembol in girdi_dizesi:
+            print(f"Sembol işleniyor: '{sembol}'")
+            if (mevcut_durum, sembol) in self.gecisler:
+                mevcut_durum = self.gecisler[(mevcut_durum, sembol)]
+                print(f"Yeni duruma geçildi: {mevcut_durum}")
+            else:
+                print(f"Durum {mevcut_durum} için sembol '{sembol}' ile geçiş bulunamadı.")
+                return False
+
+        print(f"Son durum: {mevcut_durum}")
+        return mevcut_durum in self.kabul_durumlari
+
+# DFA geçişlerini, başlangıç durumunu ve kabul durumlarını tanımlayın
+dfa_gecisler = {
+    ("q0", "a"): "q2",
+    ("q0", "b"): "q1",
+    ("q1", "a"): "q4",
+    ("q1", "b"): "q3",
+    ("q2", "a"): "q5",
+    ("q2", "b"): "q4",
+    ("q5", "b"): "q7",
+    ("q5", "a"): "q5",
+    ("q4", "a"): "q7",
+    ("q4", "b"): "q6",
+    ("q7", "a"): "q7",
+    ("q7", "b"): "q8",
+    ("q3", "b"): "q3",
+    ("q3", "a"): "q6",
+    ("q6", "b"): "q6",
+    ("q6", "a"): "q8",
+    ("q8", "a"): "q8",
+    ("q8", "b"): "q8",
+}
+
+baslangic_durumu = "q0"
+kabul_durumlari = ["q8"]
+
+# DFA oluşturun ve simüle edin
+dfa = SonluOtomat(dfa_gecisler, baslangic_durumu, kabul_durumlari)
+girdi_dizesi = input("Bir dize girin: ")
+
+if dfa.simule_et(girdi_dizesi):
+    print("Dize DFA tarafından kabul edildi.")
+else:
+    print("Dize DFA tarafından reddedildi.")
+
